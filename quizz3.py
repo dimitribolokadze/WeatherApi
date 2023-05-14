@@ -1,9 +1,11 @@
 import requests
 import json
 import datetime
+from win10toast import ToastNotifier
 
 api_key = 'cccb7e39abfbe6a058cb1ca4edc0ca3e'
 location = 'Tbilisi'
+
 base_url = f'http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric'
 
 headers = {'Content-Type': 'application/json'}
@@ -29,6 +31,9 @@ if response.status_code == 200:
         with open("weather_data.json", "w") as outfile:
             json.dump(data, outfile)
             print("Data written to weather_data.json file")
+        # display Windows notification about weather data
+        toast = ToastNotifier()
+        toast.show_toast("Weather update", f"{len(weather_list)} weather data points received for {location}.", duration=10)
     else:
         print("Error retrieving weather data:", weather_data.get("message"))
 else:
